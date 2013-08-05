@@ -13,7 +13,7 @@ module ActiveRecord
               value.to_i.to_s
             elsif column && column.type == :binary
               column.class.string_to_binary(value)
-            elsif value.is_utf8? || (column && column.type == :string)
+            elsif (value.is_utf8? && column.blank?) || (value.is_utf8? && (column.sql_type =~ /nvarchar/))
               "#{quoted_string_prefix}'#{quote_string(value)}'"
             else
               super
